@@ -81,6 +81,14 @@ public:
   virtual void ReduceCwnd (Ptr<TcpSocketState> tcb);
 
   /**
+   * \brief congestion avoidance based on DCTCP and TDCTCP algorithm
+   *
+   * \param tcb internal congestion state
+   * \param segmentsAcked count of segments ACKed 
+   */
+  virtual void CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
+
+  /**
    * \brief Get information from the acked packet
    *
    * \param tcb internal congestion state
@@ -136,6 +144,16 @@ private:
    */
   void SetDctcpAlpha (double alpha);
 
+  /**
+   * \brief decides which protocol to use
+   *
+   */
+  enum ProtocolType 
+  {
+    DCTCP,
+    TDCTCP
+  };
+
   Ptr<TcpSocketBase> m_tsb;             //!< TCP Socket Base state
   uint32_t m_ackedBytesEcn;             //!< Number of acked bytes which are marked
   uint32_t m_ackedBytesTotal;           //!< Total number of acked bytes
@@ -147,6 +165,7 @@ private:
   bool m_ceState;                       //!< DCTCP Congestion Experienced state
   bool m_delayedAckReserved;            //!< Delayed Ack state
   double m_g;                           //!< Estimation gain
+  enum ProtocolType m_pType;            //!< 0 for DCTCP, 1 for TDCTCP
 };
 
 } // namespace ns3
