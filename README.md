@@ -16,8 +16,3 @@
 [2] Resetting alpha (Congestion Indicator) to zero once Delayed Ack Timeout Event occurs
 
 [3] Dynamic calculation of Delayed Ack Timeout
-
-### Progress
-- 27 Feb:
-    - Attribute for T-DCTCP added
-    - Code for Modification-1 added
