@@ -11,7 +11,8 @@
 [3] [Notes](https://docs.google.com/document/d/1waPUTyqbXhkUqWOotZvzC89Wf7NSsDmaMUmthbU1BtE/edit?usp=sharing)- General notes for the project
 
 #### Modifications proposed in the paper:
-- Increasing cwnd when ECE = 0 in Congestion Avoidance algorithm
-- Resetting alpha (Congestion Indicator) to zero once Delayed Ack Timeout Event occurs
-- Dynamic calculation of Delayed Ack Timeout
+[1] Increasing cwnd when ECE = 0 in Congestion Avoidance algorithm
 
+[2] Resetting alpha (Congestion Indicator) to zero once Delayed Ack Timeout Event occurs
+
+[3] Dynamic calculation of Delayed Ack Timeout
