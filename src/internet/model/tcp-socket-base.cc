@@ -628,7 +628,7 @@ TcpSocketBase::Bind (const Address &address)
         }
       else if (ipv4 == Ipv4Address::GetAny () && port != 0)
         {
-          m_endPoint = m_tcp->Allocate (port);
+          m_endPoint = m_tcp->Allocate (GetBoundNetDevice (), port);
         }
       else if (ipv4 != Ipv4Address::GetAny () && port == 0)
         {
@@ -636,7 +636,7 @@ TcpSocketBase::Bind (const Address &address)
         }
       else if (ipv4 != Ipv4Address::GetAny () && port != 0)
         {
-          m_endPoint = m_tcp->Allocate (ipv4, port);
+          m_endPoint = m_tcp->Allocate (GetBoundNetDevice (), ipv4, port);
         }
       if (0 == m_endPoint)
         {
@@ -655,7 +655,7 @@ TcpSocketBase::Bind (const Address &address)
         }
       else if (ipv6 == Ipv6Address::GetAny () && port != 0)
         {
-          m_endPoint6 = m_tcp->Allocate6 (port);
+          m_endPoint6 = m_tcp->Allocate6 (GetBoundNetDevice (), port);
         }
       else if (ipv6 != Ipv6Address::GetAny () && port == 0)
         {
@@ -663,7 +663,7 @@ TcpSocketBase::Bind (const Address &address)
         }
       else if (ipv6 != Ipv6Address::GetAny () && port != 0)
         {
-          m_endPoint6 = m_tcp->Allocate6 (ipv6, port);
+          m_endPoint6 = m_tcp->Allocate6 (GetBoundNetDevice (), ipv6, port);
         }
       if (0 == m_endPoint6)
         {
@@ -2783,7 +2783,8 @@ TcpSocketBase::CompleteFork (Ptr<Packet> p, const TcpHeader& h,
   // Get port and address from peer (connecting host)
   if (InetSocketAddress::IsMatchingType (toAddress))
     {
-      m_endPoint = m_tcp->Allocate (InetSocketAddress::ConvertFrom (toAddress).GetIpv4 (),
+      m_endPoint = m_tcp->Allocate (GetBoundNetDevice (),
+                                    InetSocketAddress::ConvertFrom (toAddress).GetIpv4 (),
                                     InetSocketAddress::ConvertFrom (toAddress).GetPort (),
                                     InetSocketAddress::ConvertFrom (fromAddress).GetIpv4 (),
                                     InetSocketAddress::ConvertFrom (fromAddress).GetPort ());
@@ -2791,7 +2792,8 @@ TcpSocketBase::CompleteFork (Ptr<Packet> p, const TcpHeader& h,
     }
   else if (Inet6SocketAddress::IsMatchingType (toAddress))
     {
-      m_endPoint6 = m_tcp->Allocate6 (Inet6SocketAddress::ConvertFrom (toAddress).GetIpv6 (),
+      m_endPoint6 = m_tcp->Allocate6 (GetBoundNetDevice (),
+                                      Inet6SocketAddress::ConvertFrom (toAddress).GetIpv6 (),
                                       Inet6SocketAddress::ConvertFrom (toAddress).GetPort (),
                                       Inet6SocketAddress::ConvertFrom (fromAddress).GetIpv6 (),
                                       Inet6SocketAddress::ConvertFrom (fromAddress).GetPort ());
