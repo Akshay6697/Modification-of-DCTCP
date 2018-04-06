@@ -155,6 +155,13 @@ TcpDctcp::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 }
 
 void
+TcpDctcp::DelAckTimeoutEvent ()
+{
+  NS_LOG_INFO ("Current value of alpha" << m_alpha);
+  SetDctcpAlpha (0);
+}
+
+void
 TcpDctcp::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time &rtt)
 {
   NS_LOG_FUNCTION (this << tcb << segmentsAcked << rtt);

@@ -179,7 +179,16 @@ public:
    */
    virtual void ReduceCwnd (Ptr<TcpSocketState> tcb)
    {
-   }  
+   }
+
+  /**
+   * \brief Set alpha to zero when sender finds out Delayed Ack Timeout has happened
+   *
+   * \param tcb internal congestion state
+   */
+   virtual void DelAckTimeoutEvent ()
+   {
+   }   
 };
 
 /**
@@ -215,6 +224,7 @@ public:
   virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb,
                                 uint32_t bytesInFlight);
   virtual void ReduceCwnd(Ptr<TcpSocketState> tcb);
+  virtual void DelAckTimeoutEvent ();
   virtual Ptr<TcpCongestionOps> Fork ();
 
 protected:

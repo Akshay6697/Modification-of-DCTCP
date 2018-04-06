@@ -1871,6 +1871,12 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
     {
       uint32_t bytesAcked = ackNumber - m_txBuffer->HeadSequence ();
       uint32_t segsAcked  = bytesAcked / m_tcb->m_segmentSize;
+      
+      if (segsAcked <= 1)
+        {
+          m_congestionControl->DelAckTimeoutEvent();
+        }
+
       m_bytesAckedNotProcessed += bytesAcked % m_tcb->m_segmentSize;
 
       if (m_bytesAckedNotProcessed >= m_tcb->m_segmentSize)

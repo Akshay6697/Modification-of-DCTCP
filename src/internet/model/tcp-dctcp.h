@@ -89,6 +89,13 @@ public:
   virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
 
   /**
+   * \brief Set alpha to zero when sender finds out Delayed Ack Timeout has happened
+   *
+   * \param tcb internal congestion state
+   */
+  virtual void DelAckTimeoutEvent ();
+
+  /**
    * \brief congestion avoidance based on DCTCP and TDCTCP algorithm
    *
    * \param tcb internal congestion state
@@ -179,4 +186,3 @@ private:
 } // namespace ns3
 
 #endif /* TCP_DCTCP_H */
-
