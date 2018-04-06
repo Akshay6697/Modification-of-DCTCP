@@ -81,6 +81,14 @@ public:
   virtual void ReduceCwnd (Ptr<TcpSocketState> tcb);
 
   /**
+   * \brief Increase congestion window based on TDCTCP modification
+   *
+   * \param tcb internal congestion state
+   * \param segmentsAcked count of segments acked
+   */
+  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
+
+  /**
    * \brief congestion avoidance based on DCTCP and TDCTCP algorithm
    *
    * \param tcb internal congestion state

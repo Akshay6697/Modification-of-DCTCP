@@ -179,7 +179,7 @@ public:
    */
    virtual void ReduceCwnd (Ptr<TcpSocketState> tcb)
    {
-   }
+   }  
 };
 
 /**

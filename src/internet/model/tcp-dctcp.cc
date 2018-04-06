@@ -117,27 +117,40 @@ TcpDctcp::ReduceCwnd (Ptr<TcpSocketState> tcb)
 }
 
 void
-TcpDctcp::CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
+TcpDctcp::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
 
-  if (m_pType == 1)
+  if (tcb->m_cWnd < tcb->m_ssThresh)
     {
-      tcb->m_cWnd = (int)(tcb->m_cWnd + tcb->m_segmentSize * (1 + 1 / (1 + (m_alpha / 2.0))));
-      NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
-                       " ssthresh " << tcb->m_ssThresh);
+    if (segmentsAcked >= 1)
+      {
+        tcb->m_cWnd += tcb->m_segmentSize;
+        NS_LOG_INFO ("In SlowStart, updated to cwnd " << tcb->m_cWnd << " ssthresh " << tcb->m_ssThresh);
+        segmentsAcked = segmentsAcked - 1;
+      } 
     }
 
-  else 
+  else if (tcb->m_cWnd >= tcb->m_ssThresh)
     {
+    if (m_pType == 1)
+      {
+        tcb->m_cWnd = (int)(tcb->m_cWnd + tcb->m_segmentSize * (1 + 1 / (1 + (m_alpha / 2.0))));
+        NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
+                         " ssthresh " << tcb->m_ssThresh);
+      }
+
+    else 
+      {
       if (segmentsAcked > 0)
-        {
-          double adder = static_cast<double> (tcb->m_segmentSize * tcb->m_segmentSize) / tcb->m_cWnd.Get ();
-          adder = std::max (1.0, adder);
-          tcb->m_cWnd += static_cast<uint32_t> (adder);
-          NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
-                       " ssthresh " << tcb->m_ssThresh);
-        }
+          {
+            double adder = static_cast<double> (tcb->m_segmentSize * tcb->m_segmentSize) / tcb->m_cWnd.Get ();
+            adder = std::max (1.0, adder);
+            tcb->m_cWnd += static_cast<uint32_t> (adder);
+            NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
+                         " ssthresh " << tcb->m_ssThresh);
+          }
+      }
     }
 }
 
