@@ -1,7 +1,7 @@
 # Implementation of T-DCTCP in ns-3
 ## Course Code: CO365
 ### Assignment: #20
-#### Overview
+### Overview
 
 The assignment involves implementing modifications mentioned in the T-DCTCP paper [1] in ns-3 [3]. The modifications are as follows:
 
@@ -11,7 +11,22 @@ The assignment involves implementing modifications mentioned in the T-DCTCP pape
 
 [3] Dynamic calculation of Delayed Ack Timeout.
 
-#### References 
+### How to compile and run 
+
+Clone the repository
+
+`git clone https://github.com/Akshay6697/Modification-of-DCTCP.git`
+
+Build ns-3 with examples and tests
+
+`cd Modification-of-DCTCP`
+
+`./waf configure --enable-examples --enable-tests`
+
+`./waf build`
+
+
+### References 
 
 [1] Tanmoy Das and Krishna M. Sivalingam, "[TCP improvements for data center networks](http://ieeexplore.ieee.org/xpls/icp.jsp?arnumber=6465539)"
 
@@ -20,5 +35,4 @@ The assignment involves implementing modifications mentioned in the T-DCTCP pape
 [3] The ns-3 network simulator. http://www.nsnam.org/
 
 [4] [RFC 2001](https://dl.acm.org/citation.cfm?id=RFC2001)- TCP Slow Start, Congestion Avoidance, Fast Retransmit, and Fast Recovery Algorithms
-
 
