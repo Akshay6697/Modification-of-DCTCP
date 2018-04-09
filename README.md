@@ -5,11 +5,11 @@
 
 The assignment involves implementing modifications mentioned in the T-DCTCP paper [1] in ns-3 [3]. The modifications are as follows:
 
-[1] Increasing cwnd when ECE = 0 in Congestion Avoidance algorithm
+[1] Increasing cwnd when ECE = 0 in Congestion Avoidance algorithm.
 
-[2] Resetting alpha (Congestion Indicator) to zero once Delayed Ack Timeout Event occurs
+[2] Resetting alpha (Congestion Indicator) to zero once Delayed Ack Timeout Event occurs.
 
-[3] Dynamic calculation of Delayed Ack Timeout
+[3] Dynamic calculation of Delayed Ack Timeout.
 
 #### References 
 
