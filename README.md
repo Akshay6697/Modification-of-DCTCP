@@ -14,17 +14,31 @@ The assignment involves implementing modifications mentioned in the T-DCTCP pape
 ### How to compile and run 
 
 Clone the repository
-
-`git clone https://github.com/Akshay6697/Modification-of-DCTCP.git`
-
+```
+git clone https://github.com/Akshay6697/Modification-of-DCTCP.git
+```
 Build ns-3 with examples and tests
+```
+cd Modification-of-DCTCP
+./waf configure --enable-examples --enable-tests
+./waf build
+```
+How to run test case
+```
+./waf --run "test-runner --suite=tcp-dctcp-test"
+```
 
-`cd Modification-of-DCTCP`
+Note: Testcases to test the modifications of T-DCTCP are added in same the test case file as for DCTCP.
 
-`./waf configure --enable-examples --enable-tests`
+How to run Example
+```
+./waf  --run "dctcp-example --pathOut=scratch --writeForPlot=0 --writePcap=1"
+```
+Note: While running the example, the user can set the following variables
 
-`./waf build`
-
+      1. pathOut - Path to save results from --writeForPlot/--writePcap
+      2. writeForPlot - <0/1> to write results for plot (gnuplot)
+      3. writePcap - <0/1> to write results in pcapfile
 
 ### References 
 
