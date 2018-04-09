@@ -96,14 +96,6 @@ public:
   virtual void DelAckTimeoutEvent ();
 
   /**
-   * \brief congestion avoidance based on DCTCP and TDCTCP algorithm
-   *
-   * \param tcb internal congestion state
-   * \param segmentsAcked count of segments ACKed 
-   */
-  virtual void CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
-
-  /**
    * \brief Get information from the acked packet
    *
    * \param tcb internal congestion state

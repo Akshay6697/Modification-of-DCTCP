@@ -217,6 +217,11 @@ TcpNewReno::ReduceCwnd (Ptr<TcpSocketState> state)
   state->m_cWnd = std::max ((uint32_t)state->m_cWnd/2, state->m_segmentSize);
 }
 
+void
+TcpNewReno::DelAckTimeoutEvent ()
+{
+}
+
 Ptr<TcpCongestionOps>
 TcpNewReno::Fork ()
 {
