@@ -740,7 +740,7 @@ TcpDctcpIncrementTest::ExecuteTest (void)
   cong->PktsAcked (m_state, m_segmentsAcked, m_rtt); // for alpha
   cong->IncreaseWindow (m_state, m_segmentsAcked);  // for increasing Cwnd
  
-  uint32_t val = (uint32_t)(m_cWnd + m_segmentSize * (1 + 1 / (1 + (cong->m_alpha / 2.0))));
+  uint32_t val = (uint32_t)(m_cWnd + m_segmentSize * (1 + 1 / (1 + (cong->GetAlpha ()/ 2.0))));
   NS_TEST_ASSERT_MSG_EQ (m_state->m_cWnd.Get (), val,
                          "cWnd has updated correctly");
 
