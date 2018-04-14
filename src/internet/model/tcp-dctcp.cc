@@ -133,7 +133,7 @@ TcpDctcp::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 
   else if (tcb->m_cWnd >= tcb->m_ssThresh)
     {
-    if (m_pType == 1)
+    if (m_isTdctcp == 1)
       {
         tcb->m_cWnd = (int)(tcb->m_cWnd + tcb->m_segmentSize * (1 + 1 / (1 + (m_alpha / 2.0))));
         NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
@@ -196,6 +196,13 @@ TcpDctcp::SetDctcpAlpha (double alpha)
 {
   NS_LOG_FUNCTION (this << alpha);
   m_alpha = alpha;
+}
+
+void
+TcpDctcp::SetTDctcp ()
+{
+  NS_LOG_FUNCTION (this << m_isTdctcp);
+  m_isTdctcp = 1;
 }
 
 void

@@ -667,6 +667,171 @@ TcpDctcpDecrementTest::ExecuteTest (void)
  * \ingroup internet-test
  * \ingroup tests
  *
+ * \brief Test to validate cWnd increment in TDCTCP
+ */
+class TcpDctcpIncrementTest : public TestCase
+{
+public:
+  /**
+   * \brief Constructor
+   *
+   * \param cWnd congestion window
+   * \param ssThresh slow start threshold
+   * \param segmentSize segment size
+   * \param segmentsAcked segments acked
+   * \param highTxMark high tx mark
+   * \param lastAckedSeq last acked seq
+   * \param rtt RTT
+   * \param name Name of the test
+   */
+  TcpDctcpIncrementTest (uint32_t cWnd, uint32_t ssThresh, uint32_t segmentSize, uint32_t segmentsAcked, SequenceNumber32 nextTxSequence,
+                         SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name);
+
+private:
+  virtual void DoRun (void);
+  /** \brief Execute the test
+   */
+  void ExecuteTest (void);
+
+  uint32_t m_cWnd; //!< cWnd
+  uint32_t m_ssThresh; //!< slow start threshold 
+  uint32_t m_segmentSize; //!< segment size
+  uint32_t m_segmentsAcked; //!< segments acked
+  Time m_rtt; //!< rtt
+  SequenceNumber32 m_nextTxSequence; //!< next seq num to be sent
+  SequenceNumber32 m_lastAckedSeq; //!< last acked seq
+  Ptr<TcpSocketState> m_state; //!< state
+};
+
+TcpDctcpIncrementTest::TcpDctcpIncrementTest (uint32_t cWnd, uint32_t ssThresh, uint32_t segmentSize, uint32_t segmentsAcked, SequenceNumber32 nextTxSequence,
+                                              SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name)
+  : TestCase (name),
+    m_cWnd (cWnd),
+    m_ssThresh (ssThresh),
+    m_segmentSize (segmentSize),
+    m_segmentsAcked (segmentsAcked),
+    m_rtt (rtt),
+    m_nextTxSequence (nextTxSequence),
+    m_lastAckedSeq (lastAckedSeq)
+{
+}
+
+void
+TcpDctcpIncrementTest::DoRun ()
+{
+  Simulator::Schedule (Seconds (0.0), &TcpDctcpIncrementTest::ExecuteTest, this);
+  Simulator::Run ();
+  Simulator::Destroy ();
+}
+
+void
+TcpDctcpIncrementTest::ExecuteTest (void)
+{
+  m_state = CreateObject <TcpSocketState> ();
+  m_state->m_cWnd = m_cWnd;
+  m_state->m_segmentSize = m_segmentSize;
+  m_state->m_nextTxSequence = m_nextTxSequence;
+  m_state->m_lastAckedSeq = m_lastAckedSeq;
+  m_state->m_ssThresh = m_ssThresh;
+
+  Ptr<TcpDctcp> cong = CreateObject <TcpDctcp> ();
+  m_state->m_ecnState = TcpSocketState::ECN_IDLE;
+  cong->SetTDctcp ();
+  cong->PktsAcked (m_state, m_segmentsAcked, m_rtt); // for alpha
+  cong->IncreaseWindow (m_state, m_segmentsAcked);  // for increasing Cwnd
+ 
+  uint32_t val = (uint32_t)(m_cWnd + m_segmentSize * (1 + 1 / (1 + (cong->m_alpha / 2.0))));
+  NS_TEST_ASSERT_MSG_EQ (m_state->m_cWnd.Get (), val,
+                         "cWnd has updated correctly");
+
+}
+
+/**
+ * \ingroup internet-test
+ * \ingroup tests
+ *
+ * \brief Test to validate resetting alpha in TDCTCP
+ */
+class TcpDctcpResetalphaTest : public TestCase
+{
+public:
+  /**
+   * \brief Constructor
+   *
+   * \param cWnd congestion window
+   * \param ssThresh slow start threshold
+   * \param segmentSize segment size
+   * \param segmentsAcked segments acked
+   * \param highTxMark high tx mark
+   * \param lastAckedSeq last acked seq
+   * \param rtt RTT
+   * \param name Name of the test
+   */
+  TcpDctcpResetalphaTest (uint32_t cWnd, uint32_t ssThresh, uint32_t segmentSize, uint32_t segmentsAcked, SequenceNumber32 nextTxSequence,
+                         SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name);
+
+private:
+  virtual void DoRun (void);
+  /** \brief Execute the test
+   */
+  void ExecuteTest (void);
+
+  uint32_t m_cWnd; //!< cWnd
+  uint32_t m_ssThresh; //!< slow start threshold
+  uint32_t m_segmentSize; //!< segment size
+  uint32_t m_segmentsAcked; //!< segments acked
+  Time m_rtt; //!< rtt
+  SequenceNumber32 m_nextTxSequence; //!< next seq num to be sent
+  SequenceNumber32 m_lastAckedSeq; //!< last acked seq
+  Ptr<TcpSocketState> m_state; //!< state
+};
+
+TcpDctcpResetalphaTest::TcpDctcpResetalphaTest (uint32_t cWnd, uint32_t ssThresh, uint32_t segmentSize, uint32_t segmentsAcked, SequenceNumber32 nextTxSequence,
+                                              SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name)
+  : TestCase (name),
+    m_cWnd (cWnd),
+    m_ssThresh (ssThresh),
+    m_segmentSize (segmentSize),
+    m_segmentsAcked (segmentsAcked),
+    m_rtt (rtt),
+    m_nextTxSequence (nextTxSequence),
+    m_lastAckedSeq (lastAckedSeq)
+{
+}
+
+void
+TcpDctcpResetalphaTest::DoRun ()
+{
+  Simulator::Schedule (Seconds (0.0), &TcpDctcpResetalphaTest::ExecuteTest, this);
+  Simulator::Run ();
+  Simulator::Destroy ();
+}
+
+void
+TcpDctcpResetalphaTest :: ExecuteTest (void)
+{
+  m_state = CreateObject <TcpSocketState> ();
+  m_state->m_cWnd = m_cWnd;
+  m_state->m_segmentSize = m_segmentSize;
+  m_state->m_nextTxSequence = m_nextTxSequence;
+  m_state->m_lastAckedSeq = m_lastAckedSeq;
+  m_state->m_ssThresh = m_ssThresh;
+
+  Ptr<TcpDctcp> cong = CreateObject <TcpDctcp> ();
+  m_state->m_ecnState = TcpSocketState::ECN_ECE_RCVD;
+  cong->PktsAcked (m_state, m_segmentsAcked, m_rtt); // alpha becomes 0.0625
+
+  cong->DelAckTimeoutEvent();
+  double valueAlpha = cong->m_alpha;
+  NS_TEST_ASSERT_MSG_EQ (valueAlpha, 0.0,
+                         "Alpha set to zero correctly");
+
+ }
+
+/**
+ * \ingroup internet-test
+ * \ingroup tests
+ *
  * \brief TCP DCTCP TestSuite
  */
 class TcpDctcpTestSuite : public TestSuite
@@ -681,6 +846,8 @@ public:
                  TestCase::QUICK);
     AddTestCase (new TcpDctcpToNewReno (2 * 1446, 1446, 4 * 1446, 2, SequenceNumber32 (4753), SequenceNumber32 (3216), MilliSeconds (100), "DCTCP falls to New Reno for slowstart"), TestCase::QUICK);
     AddTestCase (new TcpDctcpDecrementTest (4 * 1446, 1446, 2, SequenceNumber32 (3216), SequenceNumber32 (4753), MilliSeconds (100), "DCTCP decrement test"), TestCase::QUICK);
+    AddTestCase (new TcpDctcpIncrementTest (4 * 1446, 1446, 1446, 2, SequenceNumber32 (3216), SequenceNumber32 (4753), MilliSeconds (100), "DCTCP increment test"), TestCase::QUICK);
+    AddTestCase (new TcpDctcpResetalphaTest (4 * 1446, 1446, 1446, 2, SequenceNumber32 (3216), SequenceNumber32 (4753), MilliSeconds (100), "DCTCP alpha reset test"), TestCase::QUICK);
   }
 };
 

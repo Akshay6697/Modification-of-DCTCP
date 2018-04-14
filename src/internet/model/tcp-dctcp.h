@@ -112,6 +112,12 @@ public:
    */
   virtual void CwndEvent (Ptr<TcpSocketState> tcb,
                           const TcpSocketState::TcpCaEvent_t event);
+  /**
+   * \brief Sets the value of m_isTdctcp 
+   *
+   * \param m_isTdctcp parameter
+   */
+  void SetTDctcp ();
 
 private:
   /**
@@ -155,12 +161,7 @@ private:
    * \brief decides which protocol to use
    *
    */
-  enum ProtocolType 
-  {
-    DCTCP,
-    TDCTCP
-  };
-
+  
   Ptr<TcpSocketBase> m_tsb;             //!< TCP Socket Base state
   uint32_t m_ackedBytesEcn;             //!< Number of acked bytes which are marked
   uint32_t m_ackedBytesTotal;           //!< Total number of acked bytes
@@ -172,7 +173,7 @@ private:
   bool m_ceState;                       //!< DCTCP Congestion Experienced state
   bool m_delayedAckReserved;            //!< Delayed Ack state
   double m_g;                           //!< Estimation gain
-  enum ProtocolType m_pType;            //!< 0 for DCTCP, 1 for TDCTCP
+  bool m_isTdctcp;                      //!< 0 for DCTCP, 1 for TDCTCP
 };
 
 } // namespace ns3
