@@ -53,10 +53,11 @@ TypeId TcpDctcp::GetTypeId (void)
                    DoubleValue (0.0),
                    MakeDoubleAccessor (&TcpDctcp::SetDctcpAlpha),
                    MakeDoubleChecker<double> (0))
-    .AddAttribute("ProtocolType", "Use this to decide protocol DCTCP or TDCTCP",
-                  EnumValue(TcpDctcp::DCTCP),
-                  MakeEnumAccessor(&TcpDctcp::m_pType),
-                  MakeEnumChecker(TcpDctcp::DCTCP, "DCTCP",TcpDctcp::TDCTCP, "TDCTCP"))
+    .AddAttribute ("ProtocolType",
+                   "True to enable TDCTCP",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&TcpDctcp::m_isTdctcp),
+                   MakeBooleanChecker ())
   ;
   return tid;
 }
@@ -81,8 +82,7 @@ TcpDctcp::TcpDctcp ()
 
 TcpDctcp::TcpDctcp (const TcpDctcp& sock)
   : TcpNewReno (sock),
-    m_tsb (sock.m_tsb),
-    m_pType (sock.m_pType)
+    m_tsb (sock.m_tsb)
 {
   NS_LOG_FUNCTION (this);
   m_delayedAckReserved = (sock.m_delayedAckReserved);
@@ -123,12 +123,7 @@ TcpDctcp::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 
   if (tcb->m_cWnd < tcb->m_ssThresh)
     {
-    if (segmentsAcked >= 1)
-      {
-        tcb->m_cWnd += tcb->m_segmentSize;
-        NS_LOG_INFO ("In SlowStart, updated to cwnd " << tcb->m_cWnd << " ssthresh " << tcb->m_ssThresh);
-        segmentsAcked = segmentsAcked - 1;
-      } 
+      segmentsAcked = TcpNewReno::SlowStart (tcb, segmentsAcked); 
     }
 
   else if (tcb->m_cWnd >= tcb->m_ssThresh)
@@ -142,14 +137,7 @@ TcpDctcp::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 
     else 
       {
-      if (segmentsAcked > 0)
-          {
-            double adder = static_cast<double> (tcb->m_segmentSize * tcb->m_segmentSize) / tcb->m_cWnd.Get ();
-            adder = std::max (1.0, adder);
-            tcb->m_cWnd += static_cast<uint32_t> (adder);
-            NS_LOG_INFO ("In CongAvoid, updated to cwnd " << tcb->m_cWnd <<
-                         " ssthresh " << tcb->m_ssThresh);
-          }
+        TcpNewReno::CongestionAvoidance (tcb, segmentsAcked);
       }
     }
 }
