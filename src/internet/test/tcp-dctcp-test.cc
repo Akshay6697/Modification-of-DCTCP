@@ -822,7 +822,7 @@ TcpDctcpResetalphaTest :: ExecuteTest (void)
   cong->PktsAcked (m_state, m_segmentsAcked, m_rtt); // alpha becomes 0.0625
 
   cong->DelAckTimeoutEvent();
-  double valueAlpha = cong->m_alpha;
+  double valueAlpha = cong->GetAlpha ();
   NS_TEST_ASSERT_MSG_EQ (valueAlpha, 0.0,
                          "Alpha set to zero correctly");
 

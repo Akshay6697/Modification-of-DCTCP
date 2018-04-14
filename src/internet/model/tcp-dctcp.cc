@@ -205,6 +205,13 @@ TcpDctcp::SetTDctcp ()
   m_isTdctcp = 1;
 }
 
+double
+TcpDctcp::GetAlpha ()
+{
+  NS_LOG_FUNCTION (this << m_alpha);
+  return m_alpha;
+}
+
 void
 TcpDctcp::Reset (Ptr<TcpSocketState> tcb)
 {

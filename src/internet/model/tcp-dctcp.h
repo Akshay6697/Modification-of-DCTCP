@@ -115,9 +115,14 @@ public:
   /**
    * \brief Sets the value of m_isTdctcp 
    *
-   * \param m_isTdctcp parameter
    */
   void SetTDctcp ();
+
+  /**
+   * \brief returns the value of m_alpha 
+   *
+   */  
+  double GetAlpha ();
 
 private:
   /**
